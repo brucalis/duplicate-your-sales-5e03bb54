@@ -154,8 +154,8 @@ function Index() {
               FAQ
             </a>
           </nav>
-          <Button size="sm" className="hidden md:inline-flex">
-            Quero dobrar meus resultados
+          <Button size="sm" className="hidden md:inline-flex" asChild>
+            <a href="#cta">Quero dobrar meus resultados</a>
           </Button>
         </div>
       </header>
