@@ -182,13 +182,15 @@ function Index() {
                 anúncios.
               </p>
               <div className="flex flex-col gap-4 sm:flex-row">
-                <Button size="lg" className="group text-base">
-                  Começar agora
-                  <ArrowRight className="transition-transform group-hover:translate-x-1" />
-                </Button>
-                <Button size="lg" variant="outline" className="text-base">
-                  Ver como funciona
-                </Button>
+            <Button size="lg" className="group text-base" asChild>
+              <a href="#cta">
+                Começar agora
+                <ArrowRight className="transition-transform group-hover:translate-x-1" />
+              </a>
+            </Button>
+            <Button size="lg" variant="outline" className="text-base" asChild>
+              <a href="#metodo">Ver como funciona</a>
+            </Button>
               </div>
               <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1.5">
