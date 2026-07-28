@@ -365,7 +365,7 @@ function Index() {
       </section>
 
       {/* Final CTA */}
-      <section className="relative overflow-hidden px-6 py-24 md:py-32">
+      <section id="cta" className="relative overflow-hidden px-6 py-24 md:py-32">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/10" />
         <div className="relative mx-auto max-w-4xl text-center">
           <h2 className="text-4xl font-bold tracking-tight md:text-5xl">
