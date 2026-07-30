@@ -5,7 +5,6 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
-  Menu,
   Shield,
   Sparkles,
   Timer,
