@@ -1,32 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
-  BadgeCheck,
-  Bug,
   Check,
   ChevronLeft,
   ChevronRight,
-  Clock,
-  Code2,
-  Cpu,
-  Gauge,
-  History,
-  Images,
-  Infinity as InfinityIcon,
-  Keyboard,
-  LayoutGrid,
-  ListOrdered,
   Menu,
-  MessageSquare,
-  Puzzle,
-  RefreshCw,
-  Search,
-  Settings,
   Shield,
   Sparkles,
-  Wand2,
-  Wrench,
+  Timer,
   X,
   Zap,
 } from "lucide-react";
@@ -45,17 +27,17 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Super Lovable — Use a Lovable sem ficar sem créditos" },
+      { title: "Super Lovable — Use a Lovable sem gastar créditos" },
       {
         name: "description",
         content:
-          "Extensão para Chrome que remove as interrupções da Lovable. Instale em menos de um minuto e crie seus projetos sem limites a partir de R$ 9,90.",
+          "Extensão para Chrome que congela o consumo de créditos da Lovable. Funciona inclusive em contas gratuitas. Instale em menos de um minuto por R$ 9,90.",
       },
       { property: "og:title", content: "Super Lovable — Crie sem limites na Lovable" },
       {
         property: "og:description",
         content:
-          "Trabalhe sem interrupções, entregue mais projetos e esqueça a barrinha de créditos. Extensão premium para Chrome.",
+          "Congele o consumo de créditos e continue criando do início ao fim. Extensão premium para Chrome.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -72,105 +54,127 @@ const navLinks = [
   { label: "FAQ", href: "#faq" },
 ];
 
-/* ---------------- Header ---------------- */
+/* ---------------- Countdown ---------------- */
+
+const CYCLE = 15 * 60;
+
+function useCountdown() {
+  const [left, setLeft] = useState(CYCLE);
+  const startedAt = useRef<number | null>(null);
+
+  useEffect(() => {
+    startedAt.current = Date.now();
+    const tick = () => {
+      const elapsed = Math.floor((Date.now() - (startedAt.current ?? Date.now())) / 1000);
+      setLeft(CYCLE - (elapsed % CYCLE));
+    };
+    tick();
+    const id = window.setInterval(tick, 1000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const m = Math.floor(left / 60);
+  const s = left % 60;
+  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+}
+
+function Countdown({ className }: { className?: string }) {
+  const time = useCountdown();
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-full bg-black/25 px-2.5 py-1 text-[12px] font-bold tabular-nums text-white ring-1 ring-white/25",
+        className,
+      )}
+    >
+      <Timer className="h-3.5 w-3.5" />
+      {time}
+    </span>
+  );
+}
+
+/* ---------------- Header (barra única) ---------------- */
 
 function Logo() {
   return (
     <a href="#topo" className="flex items-center gap-2.5">
-      <span className="bg-brand flex h-9 w-9 items-center justify-center rounded-xl shadow-[0_8px_24px_-10px_oklch(0.7_0.23_350/0.8)]">
-        <Sparkles className="h-4.5 w-4.5 text-primary-foreground" strokeWidth={2.4} />
+      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 ring-1 ring-white/30 backdrop-blur">
+        <Sparkles className="h-4.5 w-4.5 text-white" strokeWidth={2.4} />
       </span>
-      <span className="text-[15px] font-semibold tracking-tight">
-        Super <span className="text-gradient">Lovable</span>
-      </span>
+      <span className="text-[15px] font-bold tracking-tight text-white">Super Lovable</span>
     </a>
-  );
-}
-
-function TopBar() {
-  return (
-    <div className="relative z-50 border-b border-border/60 bg-[linear-gradient(90deg,oklch(0.7_0.23_350/0.18),oklch(0.62_0.22_300/0.18))] backdrop-blur">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-4 gap-y-1.5 px-5 py-2 text-center sm:px-8">
-        <p className="text-[12.5px] font-medium text-foreground/90">
-          🔥 Oferta de lançamento • Use a Lovable sem gastar créditos por apenas{" "}
-          <span className="font-semibold text-primary">R$ 9,90</span>
-        </p>
-        <a
-          href="#planos"
-          className="inline-flex items-center gap-1 rounded-full border border-primary/40 bg-background/40 px-3 py-1 text-[11.5px] font-semibold text-primary transition-colors hover:bg-primary/15"
-        >
-          Quero começar <ArrowRight className="h-3 w-3" />
-        </a>
-      </div>
-    </div>
   );
 }
 
 function Header() {
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   return (
     <header className="sticky top-0 z-50">
-      <TopBar />
-      <div
-        className={cn(
-          "border-b transition-all duration-300",
-          scrolled
-            ? "border-border/70 bg-background/80 backdrop-blur-xl"
-            : "border-transparent bg-background/40 backdrop-blur",
-        )}
-      >
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
+      <div className="relative overflow-hidden bg-[linear-gradient(90deg,#FF2DBB_0%,#FF4FD8_55%,#FF2DBB_100%)] shadow-[0_10px_40px_-12px_rgba(255,45,187,0.65)]">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_-40%,rgba(255,255,255,0.45),transparent_60%)]" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/50" />
+
+        <div className="relative mx-auto flex min-h-16 max-w-6xl flex-wrap items-center justify-between gap-x-5 gap-y-2 px-5 py-2.5 sm:px-8">
           <Logo />
-          <nav className="hidden items-center gap-7 md:flex">
+
+          <div className="order-3 flex w-full items-center justify-center gap-2 lg:order-none lg:w-auto">
+            <p className="text-center text-[12.5px] font-semibold text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.25)] sm:text-[13.5px]">
+              🔥 Use a Lovable sem gastar créditos • R$ 9,90
+            </p>
+            <Countdown />
+          </div>
+
+          <nav className="hidden items-center gap-6 xl:flex">
             {navLinks.map((l) => (
               <a
                 key={l.href}
                 href={l.href}
-                className="text-[13.5px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+                className="text-[13px] font-semibold text-white/85 transition-colors hover:text-white"
               >
                 {l.label}
               </a>
             ))}
           </nav>
+
           <div className="flex items-center gap-2">
-            <CtaButton href="#planos" size="sm" className="hidden sm:inline-flex">
+            <a
+              href="#planos"
+              className="hidden h-10 items-center justify-center rounded-full bg-white px-5 text-[13px] font-bold text-[#C0116F] shadow-[0_8px_24px_-10px_rgba(0,0,0,0.5)] transition-transform duration-300 hover:-translate-y-0.5 sm:inline-flex"
+            >
               COMEÇAR AGORA
-            </CtaButton>
+            </a>
             <button
               type="button"
               aria-label="Abrir menu"
               onClick={() => setOpen((v) => !v)}
-              className="glass flex h-10 w-10 items-center justify-center rounded-xl md:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 text-white ring-1 ring-white/30 xl:hidden"
             >
               {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </button>
           </div>
         </div>
+
         {open ? (
-          <div className="border-t border-border/60 bg-background/95 px-5 py-4 md:hidden">
-            <nav className="flex flex-col gap-1">
+          <div className="relative border-t border-white/25 bg-[#E11FA5] px-5 py-4 xl:hidden">
+            <nav className="mx-auto flex max-w-6xl flex-col gap-1">
               {navLinks.map((l) => (
                 <a
                   key={l.href}
                   href={l.href}
                   onClick={() => setOpen(false)}
-                  className="rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                  className="rounded-xl px-3 py-2.5 text-sm font-semibold text-white/90 transition-colors hover:bg-white/15 hover:text-white"
                 >
                   {l.label}
                 </a>
               ))}
-              <CtaButton href="#planos" size="sm" className="mt-2 w-full">
+              <a
+                href="#planos"
+                onClick={() => setOpen(false)}
+                className="mt-2 inline-flex h-11 w-full items-center justify-center rounded-full bg-white text-[13px] font-bold text-[#C0116F]"
+              >
                 COMEÇAR AGORA
-              </CtaButton>
+              </a>
             </nav>
           </div>
         ) : null}
@@ -186,6 +190,12 @@ const heroBullets = [
   "Instala em menos de um minuto",
   "Interface extremamente simples",
   "Continue usando a Lovable normalmente",
+];
+
+const heroSeals = [
+  "Funciona na Lovable gratuita",
+  "Instala em menos de 1 minuto",
+  "Mais de 14.782 usuários",
 ];
 
 function Hero() {
@@ -207,8 +217,8 @@ function Hero() {
           </Reveal>
           <Reveal delay={160}>
             <p className="mt-5 max-w-xl text-pretty text-base text-muted-foreground sm:text-lg">
-              Crie projetos sem interrupções, trabalhe com liberdade e esqueça a ansiedade de
-              esperar créditos para continuar produzindo.
+              Nunca mais interrompa um projeto porque seus créditos acabaram. Continue criando
+              normalmente do início ao fim.
             </p>
           </Reveal>
           <Reveal delay={240}>
@@ -233,10 +243,20 @@ function Hero() {
               </CtaButton>
             </div>
           </Reveal>
-          <Reveal delay={400}>
-            <p className="mt-6 flex items-center gap-2 text-xs text-muted-foreground">
-              <Shield className="h-3.5 w-3.5 text-primary" /> 7 dias de garantia • Pagamento único a
-              partir de R$ 9,90
+          <Reveal delay={380}>
+            <ul className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
+              {heroSeals.map((s) => (
+                <li key={s} className="flex items-center gap-1.5 text-[12.5px] font-medium text-foreground/80">
+                  <Check className="h-3.5 w-3.5 text-primary" strokeWidth={3} />
+                  {s}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+          <Reveal delay={440}>
+            <p className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
+              <Shield className="h-3.5 w-3.5 text-primary" /> 7 dias de garantia • Pagamento único
+              R$ 9,90
             </p>
           </Reveal>
         </div>
@@ -257,65 +277,61 @@ function Hero() {
   );
 }
 
-/* ---------------- Seção 2: Dores ---------------- */
+/* ---------------- Dores ---------------- */
 
 const pains = [
-  {
-    icon: Clock,
-    title: "Seu projeto parou no meio.",
-    text: "Você estava produzindo normalmente e precisou interromper tudo.",
-  },
-  {
-    icon: Gauge,
-    title: "Os créditos acabaram.",
-    text: "Bem na hora em que você estava evoluindo o projeto.",
-  },
-  {
-    icon: RefreshCw,
-    title: "Esperar virou rotina.",
-    text: "Você perde tempo aguardando novos créditos para continuar trabalhando.",
-  },
+  "Você estava quase terminando o projeto e apareceu a mensagem de que seus créditos acabaram.",
+  "Você teve que abandonar uma ideia porque não conseguiu continuar criando.",
+  "Precisou esperar horas para continuar um projeto que poderia terminar em minutos.",
 ];
 
 function PainSection() {
   return (
     <Section title="Você já passou por alguma dessas situações?">
-      <div className="grid gap-5 md:grid-cols-3">
-        {pains.map((p, i) => (
-          <Reveal key={p.title} delay={i * 90}>
-            <article className="glass-strong group h-full rounded-3xl p-7 transition-all duration-500 hover:-translate-y-1 hover:border-primary/30">
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/12 text-primary transition-transform duration-500 group-hover:scale-110">
-                <p.icon className="h-5 w-5" />
-              </span>
-              <h3 className="mt-5 text-lg font-semibold tracking-tight">{p.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.text}</p>
-            </article>
+      <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
+        <div className="space-y-4">
+          {pains.map((p, i) => (
+            <Reveal key={p} delay={i * 90}>
+              <article className="glass-strong flex items-start gap-3.5 rounded-2xl p-5 transition-all duration-500 hover:-translate-y-0.5 hover:border-primary/30">
+                <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-destructive/15 text-destructive">
+                  <X className="h-4 w-4" strokeWidth={3} />
+                </span>
+                <p className="text-[14.5px] leading-relaxed text-foreground/90">{p}</p>
+              </article>
+            </Reveal>
+          ))}
+          <Reveal delay={280}>
+            <CtaButton href="#o-que-e" size="md" className="mt-2">
+              Conhecer a solução <ArrowRight className="h-4 w-4" />
+            </CtaButton>
           </Reveal>
-        ))}
-      </div>
-
-      <Reveal delay={200}>
-        <div className="glass-strong mt-10 flex flex-col items-center gap-5 overflow-hidden rounded-3xl bg-[linear-gradient(120deg,oklch(0.7_0.23_350/0.12),oklch(0.62_0.22_300/0.12))] px-6 py-10 text-center">
-          <h3 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-            Isso não precisa mais acontecer.
-          </h3>
-          <CtaButton href="#o-que-e" size="md">
-            Conhecer a solução <ArrowRight className="h-4 w-4" />
-          </CtaButton>
         </div>
-      </Reveal>
+
+        <Reveal delay={140}>
+          <div className="glass-strong rounded-[2rem] p-3">
+            <Placeholder
+              label="[Imagem: Créditos esgotados]"
+              hint="Tela bloqueada da Lovable com a mensagem de créditos acabados"
+              aspect="aspect-[4/3]"
+              className="rounded-[1.5rem]"
+            />
+          </div>
+        </Reveal>
+      </div>
     </Section>
   );
 }
 
-/* ---------------- Seção 3: O que é ---------------- */
+/* ---------------- O que é ---------------- */
 
 const whatList = [
+  "Congela o consumo de créditos",
+  "Funciona em qualquer conta da Lovable",
+  "Inclusive contas gratuitas",
   "Instala em menos de um minuto",
   "Interface intuitiva",
   "Um clique para começar",
-  "Continua funcionando diretamente na Lovable",
-  "Não exige configurações complicadas",
+  "Crie sites, aplicativos e qualquer outro projeto sem interrupções",
 ];
 
 function WhatIsSection() {
@@ -334,18 +350,19 @@ function WhatIsSection() {
         </Reveal>
         <div>
           <Reveal>
-            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-              O que é a <span className="text-gradient">Super Lovable</span>?
+            <h2 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
+              O jeito mais simples de usar a Lovable{" "}
+              <span className="text-gradient">sem gastar créditos</span>.
             </h2>
           </Reveal>
           <Reveal delay={80}>
             <p className="mt-5 text-pretty text-base text-muted-foreground">
-              A Super Lovable é uma extensão para Chrome criada para tornar sua experiência na
-              Lovable muito mais prática.
+              A Super Lovable é uma extensão para Chrome que congela o consumo de créditos da
+              Lovable.
             </p>
             <p className="mt-3 text-pretty text-base text-muted-foreground">
-              Depois de instalada, você continua utilizando a Lovable normalmente, porém com
-              recursos adicionais e muito mais liberdade para criar.
+              Assim você continua criando normalmente, sem interrupções, inclusive utilizando contas
+              gratuitas.
             </p>
           </Reveal>
           <Reveal delay={160}>
@@ -371,28 +388,12 @@ function WhatIsSection() {
   );
 }
 
-/* ---------------- Seção 4: Em ação ---------------- */
+/* ---------------- Demonstração ---------------- */
 
 const steps = [
-  { n: "1", title: "Instale.", text: "Adicione a extensão ao Chrome." },
-  { n: "2", title: "Ative.", text: "Insira sua licença e pronto." },
-  { n: "3", title: "Abra a Lovable.", text: "Tudo aparece na mesma tela." },
-  { n: "4", title: "Comece a criar.", text: "Sem pausas, sem espera." },
-];
-
-const features = [
-  { icon: ListOrdered, name: "Fila", text: "Organize melhor sua produtividade." },
-  { icon: History, name: "Histórico", text: "Nunca perca seus prompts." },
-  { icon: Wrench, name: "Ferramentas", text: "Tudo em um só painel." },
-  { icon: Puzzle, name: "Componentes", text: "Ganhe velocidade." },
-  { icon: LayoutGrid, name: "UI", text: "Telas bonitas em minutos." },
-  { icon: Search, name: "SEO", text: "Seu projeto pronto pro Google." },
-  { icon: Code2, name: "Refatoração", text: "Código limpo sem esforço." },
-  { icon: MessageSquare, name: "Comentários", text: "Feedback direto no projeto." },
-  { icon: Bug, name: "Bugs", text: "Encontre e corrija rápido." },
-  { icon: Gauge, name: "Otimização", text: "Mais desempenho por padrão." },
-  { icon: Cpu, name: "Modelos de IA", text: "Escolha o melhor para cada tarefa." },
-  { icon: Settings, name: "Configurações", text: "Tudo acessível em poucos cliques." },
+  { n: "1", title: "Instalar", text: "Adicione a extensão ao Chrome." },
+  { n: "2", title: "Ativar", text: "Insira sua licença e pronto." },
+  { n: "3", title: "Criar", text: "Sem pausas, sem espera." },
 ];
 
 function HowItWorksSection() {
@@ -415,34 +416,20 @@ function HowItWorksSection() {
           </div>
         </Reveal>
         <Reveal delay={120}>
-          <ol className="glass-strong flex h-full flex-col justify-center gap-6 rounded-[2rem] p-7">
+          <ol className="glass-strong flex h-full flex-col justify-center gap-7 rounded-[2rem] p-7">
             {steps.map((s) => (
               <li key={s.n} className="flex items-start gap-4">
-                <span className="bg-brand flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-[13px] font-bold text-primary-foreground">
+                <span className="bg-brand flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-[14px] font-bold text-primary-foreground">
                   {s.n}
                 </span>
                 <div>
-                  <p className="text-[15px] font-semibold tracking-tight">{s.title}</p>
+                  <p className="text-[16px] font-semibold tracking-tight">{s.title}</p>
                   <p className="text-[13px] text-muted-foreground">{s.text}</p>
                 </div>
               </li>
             ))}
           </ol>
         </Reveal>
-      </div>
-
-      <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {features.map((f, i) => (
-          <Reveal key={f.name} delay={(i % 4) * 60}>
-            <div className="glass group h-full rounded-2xl p-5 transition-all duration-400 hover:-translate-y-1 hover:border-primary/30 hover:bg-primary/[0.04]">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/12 text-primary transition-transform duration-400 group-hover:scale-110">
-                <f.icon className="h-4 w-4" />
-              </span>
-              <p className="mt-4 text-sm font-semibold tracking-tight">{f.name}</p>
-              <p className="mt-1 text-[12.5px] leading-relaxed text-muted-foreground">{f.text}</p>
-            </div>
-          </Reveal>
-        ))}
       </div>
 
       <Reveal delay={140}>
@@ -456,45 +443,46 @@ function HowItWorksSection() {
   );
 }
 
-/* ---------------- Seção 5: Benefícios ---------------- */
+/* ---------------- Tudo o que você ganha ---------------- */
 
-const benefits = [
-  { icon: Images, title: "Upload de até 5 imagens", text: "Envie referências de uma vez só." },
-  { icon: InfinityIcon, title: "Projetos ilimitados", text: "Crie quantos quiser, sem travas." },
-  { icon: Zap, title: "Mais velocidade", text: "Da ideia ao resultado em minutos." },
-  { icon: Sparkles, title: "Interface intuitiva", text: "Nada para aprender, é só usar." },
-  { icon: BadgeCheck, title: "Compatível com Chrome", text: "Funciona onde você já trabalha." },
-  { icon: RefreshCw, title: "Atualizações constantes", text: "Novos recursos sempre incluídos." },
-  { icon: Keyboard, title: "Atalhos rápidos", text: "Menos cliques, mais produção." },
-  { icon: Wand2, title: "Ferramentas integradas", text: "Tudo dentro da própria Lovable." },
+const gains = [
+  [
+    "Congelamento inteligente dos créditos",
+    "Continue criando normalmente sem consumir créditos da Lovable.",
+  ],
+  ["Upload de até cinco imagens", "Envie várias referências de uma única vez e economize tempo."],
+  ["Ferramentas integradas", "Tenha todos os recursos organizados em um único painel."],
+  ["Atualizações constantes", "Novas funções chegam automaticamente."],
+  ["Interface intuitiva", "Instale e use imediatamente. Sem configuração complicada."],
+  ["Compatível com qualquer conta", "Inclusive contas gratuitas da Lovable."],
 ];
 
-function BenefitsSection() {
+function GainsSection() {
   return (
-    <Section id="recursos" eyebrow="Recursos" title="Tudo pensado para você criar mais.">
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {benefits.map((b, i) => (
-          <Reveal key={b.title} delay={(i % 4) * 70}>
-            <article className="glass-strong group flex h-full flex-col rounded-3xl p-5 transition-all duration-500 hover:-translate-y-1.5 hover:border-primary/30">
-              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/12 text-primary transition-transform duration-500 group-hover:scale-110">
-                <b.icon className="h-4.5 w-4.5" />
-              </span>
-              <Placeholder
-                label={`[Imagem ${b.title}]`}
-                aspect="aspect-[16/10]"
-                className="mt-5 rounded-2xl"
-              />
-              <h3 className="mt-5 text-[15px] font-semibold tracking-tight">{b.title}</h3>
-              <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">{b.text}</p>
-            </article>
-          </Reveal>
-        ))}
-      </div>
+    <Section id="recursos" eyebrow="Recursos" title="Tudo o que você ganha">
+      <Reveal>
+        <Accordion type="single" collapsible className="mx-auto max-w-3xl">
+          {gains.map(([title, desc]) => (
+            <AccordionItem
+              key={title}
+              value={title}
+              className="glass mb-3 rounded-2xl border px-5 transition-colors hover:border-primary/25"
+            >
+              <AccordionTrigger className="text-left text-[15px] font-semibold hover:no-underline">
+                {title}
+              </AccordionTrigger>
+              <AccordionContent className="text-[14px] leading-relaxed text-muted-foreground">
+                {desc}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </Reveal>
     </Section>
   );
 }
 
-/* ---------------- Seção 6: Comparativo ---------------- */
+/* ---------------- Comparativo ---------------- */
 
 const comparison = [
   ["Limitações diárias", "Sem limites"],
@@ -502,7 +490,7 @@ const comparison = [
   ["Interface comum", "Interface premium"],
   ["Poucos recursos", "Ferramentas extras"],
   ["Atualizações esporádicas", "Atualizações constantes"],
-  ["Maior investimento", "A partir de R$ 9,90"],
+  ["Maior investimento", "R$ 9,90"],
 ];
 
 function ComparisonSection() {
@@ -549,7 +537,7 @@ function ComparisonSection() {
   );
 }
 
-/* ---------------- Seção 7: Depoimentos ---------------- */
+/* ---------------- Prova social ---------------- */
 
 const slides = [
   { label: "[Print WhatsApp]", hint: "Conversas reais de clientes satisfeitos" },
@@ -563,15 +551,20 @@ function TestimonialsSection() {
   const [index, setIndex] = useState(0);
   const go = (dir: number) => setIndex((i) => (i + dir + slides.length) % slides.length);
 
+  useEffect(() => {
+    const id = window.setInterval(() => setIndex((i) => (i + 1) % slides.length), 3000);
+    return () => window.clearInterval(id);
+  }, [index]);
+
   return (
     <Section
       id="depoimentos"
       eyebrow="Prova social"
-      title="Mais de XXX usuários já utilizam a Super Lovable."
+      title="Mais de 14.782 usuários já utilizam a Super Lovable."
       subtitle="Prints reais de quem já trabalha sem interrupções todos os dias."
     >
       <Reveal>
-        <div className="relative">
+        <div className="relative mx-auto max-w-5xl">
           <div className="overflow-hidden rounded-[2rem]">
             <div
               className="flex transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
@@ -579,13 +572,15 @@ function TestimonialsSection() {
             >
               {slides.map((s) => (
                 <div key={s.label} className="w-full shrink-0 px-1.5">
-                  <div className="glass-strong rounded-[2rem] p-3">
-                    <Placeholder
-                      label={s.label}
-                      hint={s.hint}
-                      aspect="aspect-[16/9]"
-                      className="rounded-[1.5rem]"
-                    />
+                  <div className="mx-auto w-full max-w-[280px] sm:max-w-[320px]">
+                    <div className="glass-strong rounded-[2rem] p-3">
+                      <Placeholder
+                        label={s.label}
+                        hint={s.hint}
+                        aspect="aspect-[9/16]"
+                        className="rounded-[1.5rem]"
+                      />
+                    </div>
                   </div>
                 </div>
               ))}
@@ -630,7 +625,7 @@ function TestimonialsSection() {
   );
 }
 
-/* ---------------- Seção 8: Planos ---------------- */
+/* ---------------- Planos ---------------- */
 
 const plans = [
   {
@@ -638,7 +633,7 @@ const plans = [
     price: "R$ 9,90",
     period: "7 dias",
     desc: "Ideal para conhecer.",
-    perks: ["Acesso completo por 7 dias", "Todos os recursos liberados", "Suporte por e-mail"],
+    perks: ["Acesso completo por 7 dias", "Todos os recursos liberados", "Funciona em contas gratuitas"],
     badge: "Porta de entrada",
     highlight: false,
   },
@@ -647,7 +642,7 @@ const plans = [
     price: "R$ 29,90",
     period: "12 meses",
     desc: "Um ano inteiro criando sem pausas.",
-    perks: ["12 meses de acesso", "Atualizações incluídas", "Suporte prioritário"],
+    perks: ["12 meses de acesso", "Atualizações incluídas", "Todos os recursos liberados"],
     badge: "★★★★★ Melhor custo-benefício",
     highlight: "soft" as const,
   },
@@ -656,7 +651,12 @@ const plans = [
     price: "R$ 79,90",
     period: "Acesso vitalício",
     desc: "Pague uma vez, use para sempre.",
-    perks: ["Acesso vitalício", "Todas as atualizações futuras", "Suporte premium", "Novos recursos primeiro"],
+    perks: [
+      "Acesso vitalício",
+      "Todas as atualizações futuras",
+      "Novos recursos primeiro",
+      "Todos os recursos liberados",
+    ],
     badge: "Mais vendido",
     highlight: "strong" as const,
   },
@@ -668,7 +668,7 @@ function PricingSection() {
       id="planos"
       eyebrow="Planos"
       title="Escolha quanto tempo você quer criar sem limites."
-      subtitle="Pagamento único. Sem mensalidade escondida. Sem surpresa."
+      subtitle="A ferramenta mais completa pelo valor mais acessível da internet."
     >
       <div className="grid items-stretch gap-5 lg:grid-cols-3">
         {plans.map((p, i) => (
@@ -723,7 +723,7 @@ function PricingSection() {
   );
 }
 
-/* ---------------- Seção 9: Garantia ---------------- */
+/* ---------------- Garantia ---------------- */
 
 function GuaranteeSection() {
   return (
@@ -746,9 +746,13 @@ function GuaranteeSection() {
   );
 }
 
-/* ---------------- Seção 10: FAQ ---------------- */
+/* ---------------- FAQ ---------------- */
 
 const faqs = [
+  [
+    "Funciona na Lovable gratuita?",
+    "Sim. A extensão funciona em qualquer conta da Lovable, inclusive na versão gratuita. Você não precisa contratar nenhum outro plano para utilizá-la.",
+  ],
   ["Preciso entender programação?", "Não. A Super Lovable foi feita para qualquer pessoa. Você instala, ativa e usa."],
   ["Funciona em qualquer conta?", "Sim. Funciona normalmente na sua conta atual da Lovable, sem trocar nada."],
   ["Como recebo minha licença?", "Por e-mail, logo após a confirmação do pagamento."],
@@ -756,7 +760,6 @@ const faqs = [
   ["Posso trocar de computador?", "Pode. Basta instalar a extensão e ativar sua licença no novo dispositivo."],
   ["Vou precisar comprar créditos?", "Não. A proposta é justamente você produzir sem depender da barrinha de créditos."],
   ["Recebo atualizações?", "Sim. Atualizações são automáticas e inclusas no seu plano."],
-  ["Como funciona o suporte?", "Atendimento humano por e-mail e comunidade, com prioridade nos planos maiores."],
   ["É seguro?", "Sim. A extensão roda no seu navegador e não altera nada da sua conta."],
   ["Existe garantia?", "Sete dias de garantia total. Não gostou, devolvemos 100% do valor."],
 ];
@@ -793,14 +796,17 @@ function FinalCta() {
     <section id="cta-final" className="relative overflow-hidden px-5 py-24 sm:px-8 md:py-32">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,oklch(0.7_0.23_350/0.16),transparent_65%)]" />
       <Reveal className="relative mx-auto max-w-3xl text-center">
-        <h2 className="text-balance text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
-          Comece hoje mesmo a criar <span className="text-gradient">sem limites</span>.
+        <h2 className="text-balance text-3xl font-semibold leading-tight tracking-tight sm:text-4xl md:text-5xl">
+          O próximo projeto que você abandonar por falta de créditos pode ser justamente o que{" "}
+          <span className="text-gradient">mudaria o seu negócio</span>.
         </h2>
         <p className="mx-auto mt-5 max-w-xl text-pretty text-base text-muted-foreground sm:text-lg">
-          Junte-se aos criadores que já trabalham sem depender da barrinha de créditos.
+          Não interrompa mais suas ideias no meio do caminho. Instale a Super Lovable e continue
+          criando do início ao fim, sem depender de créditos.
         </p>
         <CtaButton href="#planos" size="lg" className="mt-9">
-          Quero usar a Super Lovable <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          QUERO CRIAR SEM LIMITES{" "}
+          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
         </CtaButton>
       </Reveal>
     </section>
@@ -811,9 +817,16 @@ function Footer() {
   return (
     <footer className="border-t border-border/60 px-5 py-12 sm:px-8">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 md:flex-row">
-        <Logo />
+        <a href="#topo" className="flex items-center gap-2.5">
+          <span className="bg-brand flex h-9 w-9 items-center justify-center rounded-xl">
+            <Sparkles className="h-4.5 w-4.5 text-primary-foreground" strokeWidth={2.4} />
+          </span>
+          <span className="text-[15px] font-semibold tracking-tight">
+            Super <span className="text-gradient">Lovable</span>
+          </span>
+        </a>
         <nav className="flex flex-wrap items-center justify-center gap-x-7 gap-y-2">
-          {["Termos de Uso", "Política de Privacidade", "Suporte", "Contato"].map((l) => (
+          {["Termos de Uso", "Política de Privacidade", "Contato"].map((l) => (
             <a
               key={l}
               href="#topo"
@@ -840,7 +853,7 @@ function LandingPage() {
         <PainSection />
         <WhatIsSection />
         <HowItWorksSection />
-        <BenefitsSection />
+        <GainsSection />
         <ComparisonSection />
         <TestimonialsSection />
         <PricingSection />
