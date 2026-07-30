@@ -53,7 +53,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Uma extensão elegante para o Chrome que turbina o uso do Lovable. Simples de instalar, feita para quem cria todos os dias.",
+          "Extensão para Chrome que eleva sua experiência com o Lovable. Instalação simples, atualizações incluídas e pagamento único.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
