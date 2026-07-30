@@ -5,7 +5,6 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
-  Menu,
   Shield,
   Sparkles,
   Timer,
@@ -46,14 +45,6 @@ export const Route = createFileRoute("/")({
   component: LandingPage,
 });
 
-const navLinks = [
-  { label: "Como funciona", href: "#como-funciona" },
-  { label: "Recursos", href: "#recursos" },
-  { label: "Depoimentos", href: "#depoimentos" },
-  { label: "Planos", href: "#planos" },
-  { label: "FAQ", href: "#faq" },
-];
-
 /* ---------------- Countdown ---------------- */
 
 const CYCLE = 15 * 60;
@@ -93,91 +84,52 @@ function Countdown({ className }: { className?: string }) {
   );
 }
 
+function useClientDate() {
+  const [date, setDate] = useState<string | null>(null);
+  useEffect(() => {
+    setDate(
+      new Intl.DateTimeFormat("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }).format(new Date()),
+    );
+  }, []);
+  return date;
+}
+
 /* ---------------- Header (barra única) ---------------- */
 
 function Logo() {
   return (
-    <a href="#topo" className="flex items-center gap-2.5">
-      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 ring-1 ring-white/30 backdrop-blur">
-        <Sparkles className="h-4.5 w-4.5 text-white" strokeWidth={2.4} />
+    <a href="#topo" className="flex shrink-0 items-center gap-2.5">
+      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/15 ring-1 ring-white/30">
+        <Sparkles className="h-4 w-4 text-white" strokeWidth={2.4} />
       </span>
-      <span className="text-[15px] font-bold tracking-tight text-white">Super Lovable</span>
+      <span className="hidden text-[15px] font-bold tracking-tight text-white sm:inline">Super Lovable</span>
     </a>
   );
 }
 
 function Header() {
-  const [open, setOpen] = useState(false);
+  const date = useClientDate();
 
   return (
     <header className="sticky top-0 z-50">
-      <div className="relative overflow-hidden bg-[linear-gradient(90deg,#FF2DBB_0%,#FF4FD8_55%,#FF2DBB_100%)] shadow-[0_10px_40px_-12px_rgba(255,45,187,0.65)]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_-40%,rgba(255,255,255,0.45),transparent_60%)]" />
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/50" />
-
-        <div className="relative mx-auto flex min-h-16 max-w-6xl flex-wrap items-center justify-between gap-x-5 gap-y-2 px-5 py-2.5 sm:px-8">
+      <div className="bg-[#FF2DBB] shadow-[0_10px_40px_-12px_rgba(255,45,187,0.55)]">
+        <div className="mx-auto flex min-h-[3.5rem] max-w-6xl items-center gap-4 px-4 py-2.5 sm:px-8">
           <Logo />
 
-          <div className="order-3 flex w-full items-center justify-center gap-2 lg:order-none lg:w-auto">
-            <p className="text-center text-[12.5px] font-semibold text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.25)] sm:text-[13.5px]">
-              🔥 Use a Lovable sem gastar créditos • R$ 9,90
+          <div className="flex flex-1 flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center">
+            <p className="text-[12px] font-bold text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.25)] sm:text-[13.5px]">
+              Lovable Ilimitada sem gastar créditos: R$ 9,90
             </p>
+            <span className="text-[12px] font-bold text-white/90 sm:text-[13.5px]">
+              🔥 Somente hoje {date ? `(${date})` : "(...)"}
+            </span>
             <Countdown />
           </div>
-
-          <nav className="hidden items-center gap-6 xl:flex">
-            {navLinks.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                className="text-[13px] font-semibold text-white/85 transition-colors hover:text-white"
-              >
-                {l.label}
-              </a>
-            ))}
-          </nav>
-
-          <div className="flex items-center gap-2">
-            <a
-              href="#planos"
-              className="hidden h-10 items-center justify-center rounded-full bg-white px-5 text-[13px] font-bold text-[#C0116F] shadow-[0_8px_24px_-10px_rgba(0,0,0,0.5)] transition-transform duration-300 hover:-translate-y-0.5 sm:inline-flex"
-            >
-              COMEÇAR AGORA
-            </a>
-            <button
-              type="button"
-              aria-label="Abrir menu"
-              onClick={() => setOpen((v) => !v)}
-              className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 text-white ring-1 ring-white/30 xl:hidden"
-            >
-              {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-            </button>
-          </div>
         </div>
-
-        {open ? (
-          <div className="relative border-t border-white/25 bg-[#E11FA5] px-5 py-4 xl:hidden">
-            <nav className="mx-auto flex max-w-6xl flex-col gap-1">
-              {navLinks.map((l) => (
-                <a
-                  key={l.href}
-                  href={l.href}
-                  onClick={() => setOpen(false)}
-                  className="rounded-xl px-3 py-2.5 text-sm font-semibold text-white/90 transition-colors hover:bg-white/15 hover:text-white"
-                >
-                  {l.label}
-                </a>
-              ))}
-              <a
-                href="#planos"
-                onClick={() => setOpen(false)}
-                className="mt-2 inline-flex h-11 w-full items-center justify-center rounded-full bg-white text-[13px] font-bold text-[#C0116F]"
-              >
-                COMEÇAR AGORA
-              </a>
-            </nav>
-          </div>
-        ) : null}
       </div>
     </header>
   );
