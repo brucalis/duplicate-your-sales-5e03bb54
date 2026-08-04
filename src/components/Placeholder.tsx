@@ -26,7 +26,8 @@ export function Placeholder({ label, hint, aspect = "aspect-[4/3]", className }:
       })
       .then((base64) => {
         if (active) {
-          image.src = `data:image/png;base64,${base64.trim()}`;
+          const normalizedBase64 = base64.replace(/\s/g, "");
+          image.src = `data:image/png;base64,${normalizedBase64}`;
         }
       })
       .catch(() => {
