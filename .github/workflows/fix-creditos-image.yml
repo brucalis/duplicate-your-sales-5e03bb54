@@ -1,0 +1,35 @@
+name: Fix creditos image binary
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-creditos-image.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Decode image file correctly
+        shell: bash
+        run: |
+          set -e
+          cp public/creditos-esgotados.png /tmp/creditos-esgotados.b64
+          base64 --decode /tmp/creditos-esgotados.b64 > public/creditos-esgotados.png
+          file public/creditos-esgotados.png
+
+      - name: Commit corrected binary image
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/creditos-esgotados.png
+          git commit -m "fix: decode creditos image as valid PNG" || exit 0
+          git push
