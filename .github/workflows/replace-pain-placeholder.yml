@@ -1,0 +1,53 @@
+name: Replace pain placeholder
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/replace-pain-placeholder.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  replace:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Replace placeholder with image
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('src/routes/index.tsx')
+          content = path.read_text(encoding='utf-8')
+
+          old = '''            <Placeholder
+              label="[Imagem: Créditos esgotados]"
+              hint="Tela bloqueada da Lovable com a mensagem de créditos acabados"
+              aspect="aspect-[4/3]"
+              className="rounded-[1.5rem]"
+            />'''
+
+          new = '''            <img
+              src="/creditos-esgotados.png"
+              alt="Tela da Lovable mostrando créditos esgotados"
+              className="aspect-[4/3] w-full rounded-[1.5rem] object-cover"
+              loading="lazy"
+            />'''
+
+          if old not in content:
+              raise SystemExit('Placeholder alvo não encontrado em src/routes/index.tsx')
+
+          path.write_text(content.replace(old, new, 1), encoding='utf-8')
+          PY
+
+      - name: Commit changes and remove temporary workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/replace-pain-placeholder.yml
+          git add src/routes/index.tsx
+          git commit -m "Substitui placeholder por imagem de créditos esgotados"
+          git push
