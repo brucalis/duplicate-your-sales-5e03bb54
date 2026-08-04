@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -9,6 +10,34 @@ interface PlaceholderProps {
 }
 
 export function Placeholder({ label, hint, aspect = "aspect-[4/3]", className }: PlaceholderProps) {
+  useEffect(() => {
+    const image = document.querySelector<HTMLImageElement>(
+      'img[alt="Tela da Lovable mostrando créditos esgotados"]',
+    );
+
+    if (!image) return;
+
+    let active = true;
+
+    fetch("/creditos-esgotados.png")
+      .then((response) => {
+        if (!response.ok) throw new Error("Não foi possível carregar a imagem");
+        return response.text();
+      })
+      .then((base64) => {
+        if (active) {
+          image.src = `data:image/png;base64,${base64.trim()}`;
+        }
+      })
+      .catch(() => {
+        if (active) image.style.display = "none";
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   return (
     <div
       className={cn(
