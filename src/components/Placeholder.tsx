@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -9,6 +10,18 @@ interface PlaceholderProps {
 }
 
 export function Placeholder({ label, hint, aspect = "aspect-[4/3]", className }: PlaceholderProps) {
+  useEffect(() => {
+    const image = document.querySelector<HTMLImageElement>(
+      'img[alt="Tela da Lovable mostrando créditos esgotados"]',
+    );
+
+    if (!image) return;
+
+    image.referrerPolicy = "no-referrer";
+    image.src = "https://i.ibb.co/k6BwLFHV/d88c125a-a723-4f83-ba8e-00d7e7dbab22-1.png";
+    image.parentElement?.classList.add("shadow-glow", "overflow-hidden");
+  }, []);
+
   return (
     <div
       className={cn(
