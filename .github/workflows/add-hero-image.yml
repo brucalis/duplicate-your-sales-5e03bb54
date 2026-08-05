@@ -57,3 +57,5 @@ jobs:
           git add src/routes/index.tsx .github/workflows/add-hero-image.yml
           git commit -m "feat: adiciona imagem na hero mantendo borda sombreada [skip hero-image]"
           git push
+
+# trigger 2
