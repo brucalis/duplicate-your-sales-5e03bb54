@@ -262,7 +262,7 @@ function PainSection() {
         <Reveal delay={140}>
           <div className="glass-strong rounded-[2rem] p-3">
             <img
-              src="/creditos-esgotados.png"
+              src="/creditos-esgotados.png?v=2"
               alt="Tela da Lovable mostrando créditos esgotados"
               className="aspect-[4/3] w-full rounded-[1.5rem] object-cover"
               loading="lazy"
