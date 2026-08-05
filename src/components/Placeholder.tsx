@@ -17,9 +17,29 @@ export function Placeholder({ label, hint, aspect = "aspect-[4/3]", className }:
 
     if (!image) return;
 
-    image.referrerPolicy = "no-referrer";
-    image.src = "https://i.ibb.co/k6BwLFHV/d88c125a-a723-4f83-ba8e-00d7e7dbab22-1.png";
-    image.parentElement?.classList.add("shadow-glow", "overflow-hidden");
+    let cancelled = false;
+
+    fetch("/creditos-esgotados.png", { cache: "no-store" })
+      .then((response) => {
+        if (!response.ok) throw new Error("Falha ao carregar a imagem");
+        return response.text();
+      })
+      .then((encodedFile) => {
+        if (cancelled) return;
+
+        const firstLayer = encodedFile.replace(/\s/g, "");
+        const actualPngBase64 = window.atob(firstLayer).replace(/\s/g, "");
+
+        image.src = `data:image/png;base64,${actualPngBase64}`;
+        image.parentElement?.classList.add("shadow-glow", "overflow-hidden");
+      })
+      .catch((error) => {
+        console.error("Erro ao exibir imagem de créditos esgotados:", error);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
