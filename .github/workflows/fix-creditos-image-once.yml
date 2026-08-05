@@ -1,0 +1,55 @@
+name: Corrigir imagem de créditos
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  fix-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Baixar imagem PNG real
+        run: |
+          mkdir -p public
+          curl --fail --location --retry 3 \
+            "https://i.ibb.co/k6BwLFHV/d88c125a-a723-4f83-ba8e-00d7e7dbab22-1.png" \
+            --output public/creditos-esgotados.png
+          file public/creditos-esgotados.png
+          test "$(head -c 8 public/creditos-esgotados.png | xxd -p)" = "89504e470d0a1a0a"
+
+      - name: Corrigir componente e referência da imagem
+        run: |
+          git show c429621ab75f564b1b4236f62cccb42cd415f8af:src/components/Placeholder.tsx > src/components/Placeholder.tsx
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('src/routes/index.tsx')
+          text = path.read_text(encoding='utf-8')
+          text = text.replace(
+              'src="https://i.ibb.co/k6BwLFHV/d88c125a-a723-4f83-ba8e-00d7e7dbab22-1.png"',
+              'src="/creditos-esgotados.png"',
+          )
+          text = text.replace(
+              'src="/creditos-esgotados.png"',
+              'src="/creditos-esgotados.png?v=2"',
+              1,
+          )
+          path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Remover workflow temporário e salvar correção
+        run: |
+          rm -f .github/workflows/fix-creditos-image-once.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/creditos-esgotados.png src/routes/index.tsx src/components/Placeholder.tsx .github/workflows/fix-creditos-image-once.yml
+          git commit -m "fix: adiciona imagem PNG real na seção de créditos [skip image-fix]"
+          git push
