@@ -50,36 +50,46 @@ export const Route = createFileRoute("/")({
 const CYCLE = 15 * 60;
 
 function useCountdown() {
-  const [left, setLeft] = useState(CYCLE);
+  const [leftMs, setLeftMs] = useState(CYCLE * 1000);
   const startedAt = useRef<number | null>(null);
 
   useEffect(() => {
     startedAt.current = Date.now();
     const tick = () => {
-      const elapsed = Math.floor((Date.now() - (startedAt.current ?? Date.now())) / 1000);
-      setLeft(CYCLE - (elapsed % CYCLE));
+      const now = Date.now();
+      const elapsed = now - (startedAt.current ?? now);
+      const remaining = Math.max(0, (CYCLE * 1000) - (elapsed % (CYCLE * 1000)));
+      setLeftMs(remaining);
     };
     tick();
-    const id = window.setInterval(tick, 1000);
+    const id = window.setInterval(tick, 10);
     return () => window.clearInterval(id);
   }, []);
 
-  const m = Math.floor(left / 60);
-  const s = left % 60;
-  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  const totalSeconds = Math.floor(leftMs / 1000);
+  const m = Math.floor(totalSeconds / 60);
+  const s = totalSeconds % 60;
+  const ms = Math.floor((leftMs % 1000) / 10); // Show 2 digits for deciseconds/centiseconds
+  
+  return {
+    formatted: `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}:${String(ms).padStart(2, "0")}`,
+    minutes: m,
+    seconds: s,
+    ms: ms
+  };
 }
 
 function Countdown({ className }: { className?: string }) {
-  const time = useCountdown();
+  const { formatted } = useCountdown();
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full bg-black/25 px-2.5 py-1 text-[12px] font-bold tabular-nums text-white ring-1 ring-white/25",
+        "inline-flex animate-pulse items-center gap-1.5 rounded-lg bg-red-600 px-3 py-1.5 text-[14px] font-black tabular-nums text-white shadow-[0_0_15px_rgba(220,38,38,0.5)] ring-2 ring-white/30",
         className,
       )}
     >
-      <Timer className="h-3.5 w-3.5" />
-      {time}
+      <Timer className="h-4 w-4" />
+      {formatted}
     </span>
   );
 }
@@ -117,16 +127,18 @@ function Header() {
   return (
     <header className="sticky top-0 z-50">
       <div className="bg-[#FF2DBB] shadow-[0_10px_40px_-12px_rgba(255,45,187,0.55)]">
-        <div className="mx-auto flex min-h-[3.5rem] max-w-6xl items-center gap-4 px-4 py-2.5 sm:px-8">
+        <div className="mx-auto flex min-h-[4rem] max-w-7xl items-center gap-4 px-4 py-3 sm:px-8">
           <Logo />
 
-          <div className="flex flex-1 flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center">
-            <p className="text-[12px] font-bold text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.25)] sm:text-[13.5px]">
-              Lovable Ilimitada sem gastar créditos: R$ 9,90
-            </p>
-            <span className="text-[12px] font-bold text-white/90 sm:text-[13.5px]">
-              🔥 Somente hoje {date ? `(${date})` : "(...)"}
-            </span>
+          <div className="flex flex-1 flex-wrap items-center justify-center gap-x-4 gap-y-2 text-center">
+            <div className="flex items-center gap-2">
+              <p className="text-[13px] font-black text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.25)] sm:text-[15px]">
+                Lovable Ilimitada sem gastar créditos: R$ 9,90
+              </p>
+              <span className="text-[13px] font-bold text-white/90 sm:text-[15px]">
+                🔥 Somente hoje {date ? `(${date})` : "(...)"}
+              </span>
+            </div>
             <Countdown />
           </div>
         </div>
