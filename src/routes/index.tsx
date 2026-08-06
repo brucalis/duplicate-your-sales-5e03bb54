@@ -112,12 +112,9 @@ function useClientDate() {
 
 function Logo() {
   return (
-    <a href="#topo" className="flex shrink-0 items-center gap-2.5">
-      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/15 ring-1 ring-white/30">
-        <Sparkles className="h-4 w-4 text-white" strokeWidth={2.4} />
-      </span>
-      <span className="hidden text-[15px] font-bold tracking-tight text-white sm:inline">Super Lovable</span>
-    </a>
+    <div className="flex shrink-0 items-center gap-2.5">
+      {/* Icon and text removed as per request */}
+    </div>
   );
 }
 
