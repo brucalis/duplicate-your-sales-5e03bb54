@@ -50,23 +50,33 @@ export const Route = createFileRoute("/")({
 const CYCLE = 15 * 60;
 
 function useCountdown() {
-  const [left, setLeft] = useState(CYCLE);
+  const [leftMs, setLeftMs] = useState(CYCLE * 1000);
   const startedAt = useRef<number | null>(null);
 
   useEffect(() => {
     startedAt.current = Date.now();
     const tick = () => {
-      const elapsed = Math.floor((Date.now() - (startedAt.current ?? Date.now())) / 1000);
-      setLeft(CYCLE - (elapsed % CYCLE));
+      const now = Date.now();
+      const elapsed = now - (startedAt.current ?? now);
+      const remaining = Math.max(0, (CYCLE * 1000) - (elapsed % (CYCLE * 1000)));
+      setLeftMs(remaining);
     };
     tick();
-    const id = window.setInterval(tick, 1000);
+    const id = window.setInterval(tick, 10);
     return () => window.clearInterval(id);
   }, []);
 
-  const m = Math.floor(left / 60);
-  const s = left % 60;
-  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  const totalSeconds = Math.floor(leftMs / 1000);
+  const m = Math.floor(totalSeconds / 60);
+  const s = totalSeconds % 60;
+  const ms = Math.floor((leftMs % 1000) / 10); // Show 2 digits for deciseconds/centiseconds
+  
+  return {
+    formatted: `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}:${String(ms).padStart(2, "0")}`,
+    minutes: m,
+    seconds: s,
+    ms: ms
+  };
 }
 
 function Countdown({ className }: { className?: string }) {
