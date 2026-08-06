@@ -127,16 +127,18 @@ function Header() {
   return (
     <header className="sticky top-0 z-50">
       <div className="bg-[#FF2DBB] shadow-[0_10px_40px_-12px_rgba(255,45,187,0.55)]">
-        <div className="mx-auto flex min-h-[3.5rem] max-w-6xl items-center gap-4 px-4 py-2.5 sm:px-8">
+        <div className="mx-auto flex min-h-[4rem] max-w-7xl items-center gap-4 px-4 py-3 sm:px-8">
           <Logo />
 
-          <div className="flex flex-1 flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center">
-            <p className="text-[12px] font-bold text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.25)] sm:text-[13.5px]">
-              Lovable Ilimitada sem gastar créditos: R$ 9,90
-            </p>
-            <span className="text-[12px] font-bold text-white/90 sm:text-[13.5px]">
-              🔥 Somente hoje {date ? `(${date})` : "(...)"}
-            </span>
+          <div className="flex flex-1 flex-wrap items-center justify-center gap-x-4 gap-y-2 text-center">
+            <div className="flex items-center gap-2">
+              <p className="text-[13px] font-black text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.25)] sm:text-[15px]">
+                Lovable Ilimitada sem gastar créditos: R$ 9,90
+              </p>
+              <span className="text-[13px] font-bold text-white/90 sm:text-[15px]">
+                🔥 Somente hoje {date ? `(${date})` : "(...)"}
+              </span>
+            </div>
             <Countdown />
           </div>
         </div>
