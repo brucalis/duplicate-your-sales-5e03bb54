@@ -80,16 +80,16 @@ function useCountdown() {
 }
 
 function Countdown({ className }: { className?: string }) {
-  const time = useCountdown();
+  const { formatted } = useCountdown();
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full bg-black/25 px-2.5 py-1 text-[12px] font-bold tabular-nums text-white ring-1 ring-white/25",
+        "inline-flex animate-pulse items-center gap-1.5 rounded-lg bg-red-600 px-3 py-1.5 text-[14px] font-black tabular-nums text-white shadow-[0_0_15px_rgba(220,38,38,0.5)] ring-2 ring-white/30",
         className,
       )}
     >
-      <Timer className="h-3.5 w-3.5" />
-      {time}
+      <Timer className="h-4 w-4" />
+      {formatted}
     </span>
   );
 }
