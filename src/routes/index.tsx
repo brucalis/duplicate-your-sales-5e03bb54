@@ -86,7 +86,7 @@ function Countdown({ className }: { className?: string }) {
   return (
     <span
       className={cn(
-        "inline-flex animate-pulse items-center gap-1.5 rounded-lg bg-red-600 px-3 py-1.5 text-[14px] font-black tabular-nums text-white shadow-[0_0_15px_rgba(220,38,38,0.5)] ring-2 ring-white/30",
+        "inline-flex animate-pulse-gentle items-center gap-1.5 rounded-lg bg-red-600 px-3 py-1.5 text-[14px] font-black tabular-nums text-white shadow-[0_0_15px_rgba(220,38,38,0.5)] ring-2 ring-white/30",
         className,
       )}
     >
