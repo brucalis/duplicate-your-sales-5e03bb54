@@ -649,12 +649,52 @@ function GuaranteeSection() {
     <Section>
       <Reveal>
         <div className="glass-strong mx-auto flex max-w-3xl flex-col items-center gap-6 rounded-[2rem] bg-[linear-gradient(140deg,oklch(0.7_0.23_350/0.10),oklch(0.62_0.22_300/0.10))] px-6 py-12 text-center">
-          <div className="relative flex h-32 w-32 items-center justify-center">
-            <div className="absolute inset-0 animate-pulse rounded-full bg-primary/20 blur-xl" />
-            <div className="relative flex h-full w-full flex-col items-center justify-center rounded-full border-4 border-primary/40 bg-background/50 shadow-[0_0_30px_rgba(255,45,187,0.3)]">
-              <span className="text-[20px] font-black text-primary">7</span>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-foreground">Dias</span>
-              <Shield className="absolute -bottom-2 h-8 w-8 text-primary drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]" />
+          <div className="relative flex h-48 w-48 items-center justify-center">
+            {/* Background Glow */}
+            <div className="absolute inset-0 animate-pulse rounded-full bg-amber-500/20 blur-2xl" />
+            
+            {/* Main Circular Body - Gold Brushed Metal 3D Effect */}
+            <div className="relative flex h-full w-full flex-col items-center justify-center rounded-full border-[6px] border-double border-amber-400/80 bg-[conic-gradient(from_0deg,oklch(0.85_0.15_80),oklch(0.6_0.12_70),oklch(0.9_0.18_90),oklch(0.6_0.12_70),oklch(0.85_0.15_80))] p-1 shadow-[0_15px_35px_-10px_rgba(180,130,40,0.5),inset_0_2px_10px_rgba(255,255,255,0.4),inset_0_-4px_10px_rgba(0,0,0,0.3)] ring-2 ring-amber-600/30">
+              
+              {/* Internal Texture/Shine */}
+              <div className="absolute inset-[2px] rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.2),transparent_60%)]" />
+              
+              {/* Content Container */}
+              <div className="relative z-10 flex h-full w-full flex-col items-center justify-center rounded-full bg-gradient-to-b from-transparent to-black/5">
+                
+                {/* 100% Satisfação Label */}
+                <div className="mb-0.5 flex items-center gap-1 text-[9px] font-black uppercase tracking-[0.2em] text-amber-950/90">
+                  <Star className="h-2 w-2 fill-current" />
+                  100% SATISFAÇÃO
+                  <Star className="h-2 w-2 fill-current" />
+                </div>
+                
+                {/* 7 DIAS (Center) */}
+                <div className="flex flex-col items-center leading-none">
+                  <span className="text-[42px] font-black text-amber-950 drop-shadow-[0_1px_2px_rgba(255,255,255,0.4)]">7</span>
+                  <span className="text-[12px] font-black uppercase tracking-[0.25em] text-amber-900/80">DIAS</span>
+                </div>
+
+                {/* Ribbon Effect for "OU SEU DINHEIRO DE VOLTA" */}
+                <div className="mt-2 w-[120%] -rotate-1 transform">
+                   <div className="bg-amber-900 px-2 py-1 shadow-md">
+                      <span className="block text-center text-[8px] font-black uppercase tracking-[0.1em] text-amber-100">
+                        OU SEU DINHEIRO DE VOLTA
+                      </span>
+                   </div>
+                </div>
+
+                {/* Icons at bottom */}
+                <div className="mt-2 flex gap-1.5 opacity-80">
+                  <Shield className="h-3 w-3 text-amber-950" fill="currentColor" />
+                  <Check className="h-3 w-3 text-amber-950" strokeWidth={4} />
+                </div>
+              </div>
+              
+              {/* Outer decorative elements */}
+              <div className="absolute -right-2 -top-2 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-amber-300 to-amber-600 shadow-lg ring-1 ring-white/20">
+                 <Sparkles className="h-4 w-4 text-amber-950" />
+              </div>
             </div>
           </div>
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Teste sem risco.</h2>
