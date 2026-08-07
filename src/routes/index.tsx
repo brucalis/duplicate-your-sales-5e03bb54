@@ -364,88 +364,145 @@ function WhatIsSection() {
 
 /* ---------------- Prova social ---------------- */
 
-const slides = [
-  { label: "[Print WhatsApp]", hint: "Conversas reais de clientes satisfeitos" },
-  { label: "[Print Telegram]", hint: "Feedback da comunidade no Telegram" },
-  { label: "[Print Discord]", hint: "Depoimentos do servidor no Discord" },
-  { label: "[Print Resultados]", hint: "Projetos entregues pelos usuários" },
-  { label: "[Print Clientes]", hint: "Prints de clientes finais aprovando" },
+/* ---------------- Prova social (Testemunhos Premium) ---------------- */
+
+const testimonials = [
+  {
+    content: "Já tinha comprado três extensões que paravam de funcionar depois de poucos dias. A Super Lovable foi a primeira que realmente ficou estável. Hoje uso praticamente o dia inteiro sem interrupções.",
+    author: "Rafael M.",
+    role: "Afiliado e Gestor de Tráfego",
+    metric: "+180 projetos",
+  },
+  {
+    content: "Antes eu perdia horas esperando créditos voltarem. Agora consigo desenvolver uma landing page inteira e ainda finalizar minha aplicação no mesmo dia.",
+    author: "Juliana S.",
+    role: "Infoprodutora",
+    metric: "10h economizadas/semana",
+  },
+  {
+    content: "Não sou programador. Instalei, ativei e em poucos minutos já estava usando normalmente. Muito mais simples do que imaginei.",
+    author: "Carlos R.",
+    role: "Empreendedor Digital",
+    metric: "1º projeto em 15 min",
+  },
+  {
+    content: "Só o que economizei deixando de pagar outras ferramentas já compensou o investimento. Valeu cada centavo.",
+    author: "Marina A.",
+    role: "Dona de E-commerce",
+    metric: "+R$ 2.300 economizados",
+  },
+  {
+    content: "Agora consigo manter vários projetos abertos ao mesmo tempo sem ficar preocupado em gastar créditos. Minha produtividade multiplicou.",
+    author: "Eduardo P.",
+    role: "Freelancer",
+    metric: "Muito mais produtividade",
+  },
+  {
+    content: "A fila automática e o melhorador de prompts mudaram completamente meu fluxo de trabalho. Não preciso ficar grudado na tela e o resultado dos projetos é bem melhor.",
+    author: "Fernanda L.",
+    role: "Designer e Criadora de Apps",
+    metric: "+40 prompts/dia",
+  },
 ];
 
 function TestimonialsSection() {
-  const [index, setIndex] = useState(0);
-  const go = (dir: number) => setIndex((i) => (i + dir + slides.length) % slides.length);
-
-  useEffect(() => {
-    const id = window.setInterval(() => setIndex((i) => (i + 1) % slides.length), 3000);
-    return () => window.clearInterval(id);
-  }, [index]);
+  const [isPaused, setIsPaused] = useState(false);
+  
+  // We double the testimonials for the seamless loop
+  const extendedTestimonials = [...testimonials, ...testimonials];
 
   return (
-    <Section
-      id="depoimentos"
-      eyebrow="Prova social"
-      title="Mais de 14.782 usuários já utilizam a Super Lovable."
-      subtitle="Prints reais de quem já trabalha sem interrupções todos os dias."
-    >
-      <Reveal>
-        <div className="relative mx-auto max-w-5xl">
-          <div className="overflow-hidden rounded-[2rem]">
-            <div
-              className="flex transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
-              style={{ transform: `translateX(-${index * 100}%)` }}
+    <Section id="depoimentos" className="overflow-hidden px-0 sm:px-0">
+      <div className="mx-auto flex max-w-6xl flex-col items-center px-5 text-center sm:px-8">
+        <Reveal>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary">
+            <span className="flex gap-0.5 text-amber-400">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="h-3 w-3 fill-current" />
+              ))}
+            </span>
+            Mais de 14.000 usuários
+          </span>
+        </Reveal>
+        
+        <Reveal delay={80}>
+          <h2 className="mt-5 text-3xl font-semibold tracking-tight sm:text-4xl">
+            Quem usa, recomenda.
+          </h2>
+        </Reveal>
+        
+        <Reveal delay={160}>
+          <p className="mt-4 max-w-2xl text-pretty text-base text-muted-foreground sm:text-lg">
+            Milhares de criadores, afiliados, infoprodutores e empreendedores digitais já utilizam a Super Lovable diariamente para desenvolver sem interrupções.
+          </p>
+        </Reveal>
+      </div>
+
+      <div 
+        className="relative mt-16 w-full overflow-hidden py-10"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
+        <div 
+          className={cn(
+            "flex w-max gap-6 px-3",
+            "animate-infinite-scroll",
+            isPaused && "pause-animation"
+          )}
+        >
+          {extendedTestimonials.map((t, i) => (
+            <article 
+              key={i} 
+              className="glass-strong relative flex w-[320px] flex-col rounded-[2rem] p-6 shadow-glow-sm transition-all duration-500 hover:-translate-y-2 hover:border-primary/40 hover:shadow-glow sm:w-[400px]"
             >
-              {slides.map((s) => (
-                <div key={s.label} className="w-full shrink-0 px-1.5">
-                  <div className="mx-auto w-full max-w-[280px] sm:max-w-[320px]">
-                    <div className="glass-strong rounded-[2rem] p-3">
-                      <Placeholder
-                        label={s.label}
-                        hint={s.hint}
-                        aspect="aspect-[9/16]"
-                        className="rounded-[1.5rem]"
-                      />
-                    </div>
+              <div className="flex gap-0.5 text-amber-400">
+                {[...Array(5)].map((_, j) => (
+                  <Star key={j} className="h-4 w-4 fill-current" />
+                ))}
+              </div>
+              
+              <p className="mt-5 flex-1 text-[15px] leading-relaxed text-foreground/90">
+                "{t.content}"
+              </p>
+              
+              <div className="mt-8 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary/20 to-brand/20 text-[14px] font-bold text-primary ring-1 ring-white/10">
+                    {t.author[0]}
+                  </div>
+                  <div>
+                    <h4 className="text-[14px] font-semibold leading-none">{t.author}</h4>
+                    <p className="mt-1 text-[12px] text-muted-foreground">{t.role}</p>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="mt-6 flex items-center justify-center gap-4">
-            <button
-              type="button"
-              aria-label="Anterior"
-              onClick={() => go(-1)}
-              className="glass flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:border-primary/40 hover:text-primary"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-            <div className="flex items-center gap-2">
-              {slides.map((s, i) => (
-                <button
-                  key={s.label}
-                  type="button"
-                  aria-label={`Ir para o slide ${i + 1}`}
-                  onClick={() => setIndex(i)}
-                  className={cn(
-                    "h-1.5 rounded-full transition-all duration-300",
-                    i === index ? "bg-brand w-7" : "w-1.5 bg-border",
-                  )}
-                />
-              ))}
-            </div>
-            <button
-              type="button"
-              aria-label="Próximo"
-              onClick={() => go(1)}
-              className="glass flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:border-primary/40 hover:text-primary"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
-          </div>
+                
+                <div className="rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-bold text-primary ring-1 ring-primary/20">
+                  {t.metric}
+                </div>
+              </div>
+            </article>
+          ))}
         </div>
-      </Reveal>
+      </div>
+
+      <div className="mx-auto mt-12 flex w-full max-w-6xl justify-center px-5">
+        <div className="glass-strong flex w-fit flex-wrap items-center justify-center gap-x-6 gap-y-3 rounded-full px-8 py-4 text-center text-[13px] font-medium text-muted-foreground shadow-sm sm:text-[14px]">
+          <span className="flex items-center gap-1.5">
+            <span className="flex gap-0.5 text-amber-400">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="h-3 w-3 fill-current" />
+              ))}
+            </span>
+            4,9/5
+          </span>
+          <span className="hidden h-1 w-1 rounded-full bg-border sm:block" />
+          <span>+14.000 usuários</span>
+          <span className="hidden h-1 w-1 rounded-full bg-border sm:block" />
+          <span>+320 avaliações</span>
+          <span className="hidden h-1 w-1 rounded-full bg-border sm:block" />
+          <span className="text-primary">+97% recomendam</span>
+        </div>
+      </div>
     </Section>
   );
 }
