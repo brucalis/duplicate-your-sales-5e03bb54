@@ -554,11 +554,14 @@ function GuaranteeSection() {
     <Section>
       <Reveal>
         <div className="glass-strong mx-auto flex max-w-3xl flex-col items-center gap-6 rounded-[2rem] bg-[linear-gradient(140deg,oklch(0.7_0.23_350/0.10),oklch(0.62_0.22_300/0.10))] px-6 py-12 text-center">
-          <Placeholder
-            label="[Selo de Garantia]"
-            aspect="aspect-square"
-            className="h-32 w-32 rounded-full"
-          />
+          <div className="relative flex h-32 w-32 items-center justify-center">
+            <div className="absolute inset-0 animate-pulse rounded-full bg-primary/20 blur-xl" />
+            <div className="relative flex h-full w-full flex-col items-center justify-center rounded-full border-4 border-primary/40 bg-background/50 shadow-[0_0_30px_rgba(255,45,187,0.3)]">
+              <span className="text-[20px] font-black text-primary">7</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-foreground">Dias</span>
+              <Shield className="absolute -bottom-2 h-8 w-8 text-primary drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]" />
+            </div>
+          </div>
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Teste sem risco.</h2>
           <p className="max-w-xl text-pretty text-base text-muted-foreground">
             Você possui sete dias para solicitar o cancelamento caso não fique satisfeito.
