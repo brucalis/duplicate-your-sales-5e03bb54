@@ -300,18 +300,26 @@ function WhatIsSection() {
   return (
     <Section id="o-que-e">
       <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-        <Reveal>
-          <div className="glass-strong rounded-[2rem] p-3">
-            <Placeholder
-              label="[Mockup da Extensão]"
-              hint="Print da Super Lovable aberta dentro do Chrome"
-              aspect="aspect-[5/4]"
-              className="rounded-[1.5rem]"
-            />
-          </div>
-        </Reveal>
-        <div>
+        <div className="order-2 lg:order-1">
+          <Reveal className="mb-6 lg:hidden">
+            <h2 className="text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">
+              O jeito mais simples de usar a Lovable{" "}
+              <span className="text-gradient">sem gastar créditos</span>.
+            </h2>
+          </Reveal>
           <Reveal>
+            <div className="glass-strong rounded-[2rem] p-3">
+              <Placeholder
+                label="[Mockup da Extensão]"
+                hint="Print da Super Lovable aberta dentro do Chrome"
+                aspect="aspect-[5/4]"
+                className="rounded-[1.5rem]"
+              />
+            </div>
+          </Reveal>
+        </div>
+        <div className="order-1 lg:order-2">
+          <Reveal className="hidden lg:block">
             <h2 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
               O jeito mais simples de usar a Lovable{" "}
               <span className="text-gradient">sem gastar créditos</span>.
