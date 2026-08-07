@@ -7,6 +7,7 @@ import {
   ChevronRight,
   Shield,
   Sparkles,
+  Star,
   Timer,
   X,
   Zap,
