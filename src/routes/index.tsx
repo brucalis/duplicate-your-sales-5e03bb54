@@ -308,19 +308,56 @@ function WhatIsSection() {
               <span className="text-gradient">sem gastar créditos</span>.
             </h2>
           </Reveal>
+          
           <Reveal>
             <div className="glass-strong rounded-[2rem] p-3">
               <Placeholder
                 label="[Mockup da Extensão]"
-                hint="Print da Super Lovable aberta dentro do Chrome"
+                hint="Print da Super Lovable aberta dentro do Chrome na versão mobile. no desktop mantenha igual"
                 aspect="aspect-[5/4]"
                 className="rounded-[1.5rem]"
               />
             </div>
           </Reveal>
+
+          {/* Mobile-only content moved below placeholder */}
+          <div className="mt-8 space-y-6 lg:hidden">
+            <Reveal>
+              <div className="space-y-4">
+                <p className="text-pretty text-base text-muted-foreground">
+                  A Super Lovable é uma extensão para Chrome que congela o consumo de créditos da
+                  Lovable.
+                </p>
+                <p className="text-pretty text-base text-muted-foreground">
+                  Assim você continua criando normalmente, sem interrupções, inclusive utilizando contas
+                  gratuitas.
+                </p>
+              </div>
+            </Reveal>
+
+            <Reveal delay={160}>
+              <ul className="space-y-3">
+                {whatList.map((item) => (
+                  <li key={item} className="flex items-start gap-3 text-[14.5px]">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/15">
+                      <Check className="h-3 w-3 text-primary" strokeWidth={3} />
+                    </span>
+                    <span className="text-foreground/90">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+
+            <Reveal delay={240}>
+              <CtaButton href="#planos" size="lg" className="w-full">
+                Quero a Super Lovable <ArrowRight className="h-4 w-4" />
+              </CtaButton>
+            </Reveal>
+          </div>
         </div>
-        <div className="order-1 lg:order-2">
-          <Reveal className="hidden lg:block">
+
+        <div className="hidden order-1 lg:order-2 lg:block">
+          <Reveal>
             <h2 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
               O jeito mais simples de usar a Lovable{" "}
               <span className="text-gradient">sem gastar créditos</span>.
