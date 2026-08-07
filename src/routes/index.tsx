@@ -18,6 +18,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Placeholder } from "@/components/Placeholder";
+import heroAsset from "@/assets/super-lovable-hero.png.asset.json";
 import { Reveal } from "@/components/Reveal";
 import { Section } from "@/components/Section";
 import { CtaButton } from "@/components/CtaButton";
@@ -225,11 +226,11 @@ function Hero() {
         <Reveal delay={200} className="relative">
           <div className="pointer-events-none absolute -inset-8 rounded-[3rem] bg-[radial-gradient(circle_at_60%_40%,oklch(0.66_0.24_330/0.22),transparent_70%)] blur-2xl" />
           <div className="glass-strong relative rounded-[2rem] p-3 shadow-glow">
-            <Placeholder
-              label="[Imagem Hero / VSL]"
-              hint="Vídeo ou print grande da interface da Super Lovable aberta"
-              aspect="aspect-[4/3]"
-              className="rounded-[1.5rem]"
+            <img
+              src={heroAsset.url}
+              alt="Interface da Super Lovable aberta"
+              className="w-full rounded-[1.5rem] object-cover shadow-2xl"
+              loading="eager"
             />
           </div>
         </Reveal>
