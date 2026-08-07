@@ -263,11 +263,6 @@ function PainSection() {
               </article>
             </Reveal>
           ))}
-          <Reveal delay={280}>
-            <CtaButton href="#o-que-e" size="md" className="mt-2">
-              Conhecer a solução <ArrowRight className="h-4 w-4" />
-            </CtaButton>
-          </Reveal>
         </div>
 
         <Reveal delay={140}>
