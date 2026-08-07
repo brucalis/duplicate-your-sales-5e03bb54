@@ -349,60 +349,6 @@ function WhatIsSection() {
   );
 }
 
-/* ---------------- Demonstração ---------------- */
-
-const steps = [
-  { n: "1", title: "Instalar", text: "Adicione a extensão ao Chrome." },
-  { n: "2", title: "Ativar", text: "Insira sua licença e pronto." },
-  { n: "3", title: "Criar", text: "Sem pausas, sem espera." },
-];
-
-function HowItWorksSection() {
-  return (
-    <Section
-      id="como-funciona"
-      eyebrow="Demonstração"
-      title="Veja a Super Lovable em ação."
-      subtitle="Você leva menos de um minuto para começar."
-    >
-      <div className="grid gap-6 lg:grid-cols-[1.85fr_1fr]">
-        <Reveal>
-          <div className="glass-strong h-full rounded-[2rem] p-3">
-            <Placeholder
-              label="[GIF da Extensão em uso]"
-              hint="Gravação mostrando instalação e uso dentro da Lovable"
-              aspect="aspect-video"
-              className="h-full rounded-[1.5rem]"
-            />
-          </div>
-        </Reveal>
-        <Reveal delay={120}>
-          <ol className="glass-strong flex h-full flex-col justify-center gap-7 rounded-[2rem] p-7">
-            {steps.map((s) => (
-              <li key={s.n} className="flex items-start gap-4">
-                <span className="bg-brand flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-[14px] font-bold text-primary-foreground">
-                  {s.n}
-                </span>
-                <div>
-                  <p className="text-[16px] font-semibold tracking-tight">{s.title}</p>
-                  <p className="text-[13px] text-muted-foreground">{s.text}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </Reveal>
-      </div>
-
-      <Reveal delay={140}>
-        <div className="mt-10 text-center">
-          <CtaButton href="#planos" size="lg">
-            COMEÇAR AGORA <ArrowRight className="h-4 w-4" />
-          </CtaButton>
-        </div>
-      </Reveal>
-    </Section>
-  );
-}
 
 
 /* ---------------- Comparativo ---------------- */
@@ -802,7 +748,7 @@ function LandingPage() {
         <Hero />
         <PainSection />
         <WhatIsSection />
-        <HowItWorksSection />
+        
         <ComparisonSection />
         <TestimonialsSection />
         <PricingSection />
