@@ -404,44 +404,6 @@ function HowItWorksSection() {
   );
 }
 
-/* ---------------- Tudo o que você ganha ---------------- */
-
-const gains = [
-  [
-    "Congelamento inteligente dos créditos",
-    "Continue criando normalmente sem consumir créditos da Lovable.",
-  ],
-  ["Upload de até cinco imagens", "Envie várias referências de uma única vez e economize tempo."],
-  ["Ferramentas integradas", "Tenha todos os recursos organizados em um único painel."],
-  ["Atualizações constantes", "Novas funções chegam automaticamente."],
-  ["Interface intuitiva", "Instale e use imediatamente. Sem configuração complicada."],
-  ["Compatível com qualquer conta", "Inclusive contas gratuitas da Lovable."],
-];
-
-function GainsSection() {
-  return (
-    <Section id="recursos" eyebrow="Recursos" title="Tudo o que você ganha">
-      <Reveal>
-        <Accordion type="single" collapsible className="mx-auto max-w-3xl">
-          {gains.map(([title, desc]) => (
-            <AccordionItem
-              key={title}
-              value={title}
-              className="glass mb-3 rounded-2xl border px-5 transition-colors hover:border-primary/25"
-            >
-              <AccordionTrigger className="text-left text-[15px] font-semibold hover:no-underline">
-                {title}
-              </AccordionTrigger>
-              <AccordionContent className="text-[14px] leading-relaxed text-muted-foreground">
-                {desc}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
-      </Reveal>
-    </Section>
-  );
-}
 
 /* ---------------- Comparativo ---------------- */
 
@@ -814,7 +776,6 @@ function LandingPage() {
         <PainSection />
         <WhatIsSection />
         <HowItWorksSection />
-        <GainsSection />
         <ComparisonSection />
         <TestimonialsSection />
         <PricingSection />
