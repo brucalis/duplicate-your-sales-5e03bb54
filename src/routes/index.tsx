@@ -168,8 +168,8 @@ function Hero() {
       <div className="relative mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
         <div>
           <Reveal>
-            <span className="glass inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[11.5px] font-semibold uppercase tracking-[0.18em] text-primary">
-              <Zap className="h-3.5 w-3.5" /> Extensão para Chrome
+            <span className="inline-flex items-center gap-2 rounded-full bg-[#10b981] px-3.5 py-1.5 text-[11.5px] font-black uppercase tracking-[0.05em] text-white shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+              🛡️ Método Blindado! A única extensão funcionando sem cair
             </span>
           </Reveal>
           <Reveal delay={80}>
