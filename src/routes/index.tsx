@@ -814,7 +814,6 @@ function LandingPage() {
         <PainSection />
         <WhatIsSection />
         <HowItWorksSection />
-        <GainsSection />
         <ComparisonSection />
         <TestimonialsSection />
         <PricingSection />
