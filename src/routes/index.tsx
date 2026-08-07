@@ -668,7 +668,7 @@ function LandingPage() {
         <PainSection />
         <WhatIsSection />
         
-        <ComparisonSection />
+        
         <TestimonialsSection />
         <PricingSection />
         <GuaranteeSection />
