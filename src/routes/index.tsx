@@ -313,7 +313,7 @@ function WhatIsSection() {
             <div className="glass-strong rounded-[2rem] p-3">
               <Placeholder
                 label="[Mockup da Extensão]"
-                hint="Print da Super Lovable aberta dentro do Chrome"
+                hint="Print da Super Lovable aberta dentro do Chrome na versão mobile. no desktop mantenha igual"
                 aspect="aspect-[5/4]"
                 className="rounded-[1.5rem]"
               />
